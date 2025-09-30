@@ -3,6 +3,7 @@ Flask==2.0.1
 Flask-CORS==3.0.10
 Werkzeug==2.0.1
 Jinja2==3.0.1
+gunicorn==20.1.0
 
 # AI and ML
 transformers==4.11.3
