@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nauman Patel - Portfolio</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
@@ -64,6 +64,9 @@
                 <div class="hero-buttons">
                     <a href="#projects" class="btn btn-primary">View My Work</a>
                     <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                    <a href="/download-resume" class="btn btn-download" download>
+                        <i class="fas fa-download"></i> Download Resume
+                    </a>
                 </div>
                 <div class="hero-social">
                     <a href="https://github.com/Naumanpatell" target="_blank" class="social-link">
@@ -80,7 +83,7 @@
             <div class="hero-image">
                 <div class="profile-card">
                     <div class="profile-image">
-                        <i class="fas fa-user"></i>
+                        <img src="{{ url_for('static', filename='Naumanimage.png') }}" alt="Nauman Patel">
                     </div>
                     <h3>Nauman Patel</h3>
                     <p>Computer Science Student</p>
@@ -230,7 +233,7 @@
                         </div>
                         <div class="project-links">
                             <a href="#" class="btn btn-outline">View Project</a>
-                            <a href="#" class="btn btn-outline">GitHub</a>
+                            <a href="https://github.com/abuhamideh/IBM-Hackathon" target="_blank" class="btn btn-outline">GitHub</a>
                         </div>
                     </div>
                 </div>
@@ -243,7 +246,9 @@
                         <p>
                             Designed a responsive Glassmorphism-based web app with autocomplete search for 
                             10,000+ Pokémon using PokeAPI. Features detailed stats, moves, abilities, and 
-                            evolution chains with dynamic card-based UI.
+                            evolution chains with dynamic card-based UI. Also integrated an in‑app AI assistant
+                            to help users explore Pokémon data and learn mechanics, highlighting my interest in
+                            AI/ML and conversational interfaces.
                         </p>
                         <div class="project-tech">
                             <span class="tech-tag">Flask</span>
@@ -254,7 +259,7 @@
                         </div>
                         <div class="project-links">
                             <a href="#" class="btn btn-outline">View Project</a>
-                            <a href="#" class="btn btn-outline">GitHub</a>
+                            <a href="https://github.com/Naumanpatell/PokeVerse" target="_blank" class="btn btn-outline">GitHub</a>
                         </div>
                     </div>
                 </div>
@@ -351,21 +356,24 @@
                     </div>
                 </div>
                 <div class="contact-form">
-                    <form id="contactForm">
+                    <form id="contactForm" style="opacity: 0.6; pointer-events: none;">
                         <div class="form-group">
-                            <input type="text" id="name" name="name" placeholder="Your Name" required>
+                            <input type="text" id="name" name="name" placeholder="Your Name" required disabled>
                         </div>
                         <div class="form-group">
-                            <input type="email" id="email" name="email" placeholder="Your Email" required>
+                            <input type="email" id="email" name="email" placeholder="Your Email" required disabled>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="subject" name="subject" placeholder="Subject" required>
+                            <input type="text" id="subject" name="subject" placeholder="Subject" required disabled>
                         </div>
                         <div class="form-group">
-                            <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
+                            <textarea id="message" name="message" placeholder="Your Message" rows="5" required disabled></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Send Message</button>
+                        <button type="submit" class="btn btn-primary" disabled>Contact Form Temporarily Disabled</button>
                     </form>
+                    <p style="text-align: center; margin-top: 1rem; color: #6b7280; font-style: italic;">
+                        Please use the contact information above to get in touch.
+                    </p>
                 </div>
             </div>
         </div>

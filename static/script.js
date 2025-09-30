@@ -20,6 +20,7 @@ particlesJS('particles-js', {
 // Theme Toggle
 const themeToggle = document.getElementById('theme-toggle');
 const body = document.body;
+const navbar = document.querySelector('.navbar');
 
 // Load saved theme
 const savedTheme = localStorage.getItem('theme');
@@ -33,6 +34,7 @@ themeToggle.addEventListener('click', () => {
     const isDark = body.classList.contains('dark-theme');
     localStorage.setItem('theme', isDark ? 'dark-theme' : '');
     updateThemeIcon();
+    applyNavbarStyle();
 });
 
 function updateThemeIcon() {
@@ -73,17 +75,25 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Navbar background change on scroll
-window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 50) {
-        navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-        navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+// Navbar background change on scroll (respect theme)
+function applyNavbarStyle() {
+    if (!navbar) return;
+    const isDark = body.classList.contains('dark-theme');
+    const scrolled = window.scrollY > 50;
+    if (isDark) {
+        navbar.style.background = scrolled ? 'rgba(26, 26, 26, 0.98)' : 'rgba(26, 26, 26, 0.95)';
+        navbar.style.boxShadow = scrolled ? '0 2px 20px rgba(0, 0, 0, 0.6)' : 'none';
+        navbar.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
     } else {
-        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-        navbar.style.boxShadow = 'none';
+        navbar.style.background = scrolled ? 'rgba(255, 255, 255, 0.98)' : 'rgba(255, 255, 255, 0.95)';
+        navbar.style.boxShadow = scrolled ? '0 2px 20px rgba(0, 0, 0, 0.1)' : 'none';
+        navbar.style.borderBottom = '1px solid rgba(0,0,0,0.1)';
     }
-});
+}
+
+window.addEventListener('scroll', applyNavbarStyle);
+// On load
+applyNavbarStyle();
 
 // Intersection Observer for animations
 const observerOptions = {
@@ -150,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Skill bars animation with counters
+// Skill bars animation (no percentage text replacement)
 const skillBars = document.querySelectorAll('.skill-progress');
 const skillObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -160,13 +170,6 @@ const skillObserver = new IntersectionObserver((entries) => {
             
             // Add glow effect
             entry.target.style.boxShadow = '0 0 20px rgba(37, 99, 235, 0.5)';
-            
-            // Animate counter if it exists
-            const skillName = entry.target.closest('.skill-item').querySelector('.skill-name');
-            if (skillName) {
-                const percentage = parseInt(width);
-                animateCounter(skillName, percentage);
-            }
         }
     });
 }, { threshold: 0.5 });
@@ -175,83 +178,70 @@ skillBars.forEach(bar => {
     skillObserver.observe(bar);
 });
 
-function animateCounter(element, target) {
-    let current = 0;
-    const increment = target / 50;
-    const timer = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-            current = target;
-            clearInterval(timer);
-        }
-        element.textContent = Math.floor(current) + '%';
-    }, 30);
-}
-
-// Contact form handling
-const contactForm = document.querySelector('#contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        // Get form data
-        const formData = new FormData(contactForm);
-        const data = {
-            name: formData.get('name'),
-            email: formData.get('email'),
-            subject: formData.get('subject'),
-            message: formData.get('message')
-        };
-        
-        // Simple validation
-        if (!data.name || !data.email || !data.subject || !data.message) {
-            showNotification('Please fill in all fields', 'error');
-            return;
-        }
-        
-        if (!isValidEmail(data.email)) {
-            showNotification('Please enter a valid email address', 'error');
-            return;
-        }
-        
-        // Show loading state
-        const submitBtn = contactForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Sending...';
-        submitBtn.disabled = true;
-        
-        try {
-            // Send to Flask backend
-            const response = await fetch('/api/contact', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                showNotification(result.message, 'success');
-                contactForm.reset();
-            } else {
-                if (result.errors) {
-                    showNotification(result.errors.join(', '), 'error');
-                } else {
-                    showNotification(result.message, 'error');
-                }
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            showNotification('An error occurred. Please try again later.', 'error');
-        } finally {
-            // Reset button state
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-        }
-    });
-}
+// Contact form handling - DISABLED
+// const contactForm = document.querySelector('#contactForm');
+// if (contactForm) {
+//     contactForm.addEventListener('submit', async (e) => {
+//         e.preventDefault();
+//         
+//         // Get form data
+//         const formData = new FormData(contactForm);
+//         const data = {
+//             name: formData.get('name'),
+//             email: formData.get('email'),
+//             subject: formData.get('subject'),
+//             message: formData.get('message')
+//         };
+//         
+//         // Simple validation
+//         if (!data.name || !data.email || !data.subject || !data.message) {
+//             showNotification('Please fill in all fields', 'error');
+//             return;
+//         }
+//         
+//         if (!isValidEmail(data.email)) {
+//             showNotification('Please enter a valid email address', 'error');
+//             return;
+//         }
+//         
+//         // Show loading state
+//         const submitBtn = contactForm.querySelector('button[type="submit"]');
+//         const originalText = submitBtn.textContent;
+//         submitBtn.textContent = 'Sending...';
+//         submitBtn.disabled = true;
+//         
+//         try {
+//             // Send to Flask backend
+//             const response = await fetch('/api/contact', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify(data)
+//             });
+//             
+//             const result = await response.json();
+//             
+//             if (result.success) {
+//                 showNotification(result.message, 'success');
+//                 contactForm.reset();
+//             } else {
+//                 if (result.errors) {
+//                     showNotification(result.errors.join(', '), 'error');
+//                 } else {
+//                     showNotification(result.message, 'error');
+//                 }
+//             }
+//         } catch (error) {
+//             console.error('Error:', error);
+//             showNotification('An error occurred. Please try again later.', 'error');
+//         } finally {
+//             // Reset button state
+//             submitBtn.textContent = originalText;
+//             submitBtn.disabled = false;
+//         }
+//     });
+// }
 
 // Email validation
 function isValidEmail(email) {
@@ -308,11 +298,11 @@ function showNotification(message, type) {
 // Typing animation for hero title
 function typeWriter(element, text, speed = 100) {
     let i = 0;
-    element.innerHTML = '';
+    element.textContent = '';
     
     function type() {
         if (i < text.length) {
-            element.innerHTML += text.charAt(i);
+            element.textContent += text.charAt(i);
             i++;
             setTimeout(type, speed);
         }
@@ -324,7 +314,7 @@ function typeWriter(element, text, speed = 100) {
 // Initialize typing animation when hero section is visible
 const heroTitle = document.querySelector('.hero-title');
 if (heroTitle) {
-    const originalText = heroTitle.innerHTML;
+    const originalText = heroTitle.textContent;
     const heroObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {

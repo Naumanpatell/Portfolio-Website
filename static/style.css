@@ -23,13 +23,71 @@ body.dark-theme {
     color: #e5e5e5;
 }
 
+/* Dark theme: headings */
+body.dark-theme h1,
+body.dark-theme h2,
+body.dark-theme h3,
+body.dark-theme h4,
+body.dark-theme .section-title {
+    color: #ffffff;
+}
+
+/* Dark theme content colors */
+body.dark-theme .about-text p,
+body.dark-theme .project-content p,
+body.dark-theme .timeline-content p,
+body.dark-theme .contact-info p,
+body.dark-theme .timeline-date,
+body.dark-theme .skill-name,
+body.dark-theme .project-content h3,
+body.dark-theme .skill-category h3,
+body.dark-theme .contact-info h3 {
+    color: #e5e5e5;
+}
+
+body.dark-theme .stat p,
+body.dark-theme .project-content p,
+body.dark-theme .contact-item span {
+    color: #c7c7c7;
+}
+
+/* Tech tags */
+body.dark-theme .tech-tag {
+    background-color: #1f2937;
+    color: #93c5fd;
+}
+
+/* Inputs and textareas */
+body.dark-theme .form-group input,
+body.dark-theme .form-group textarea {
+    background-color: #1f1f1f;
+    border-color: #404040;
+    color: #e5e5e5;
+}
+
+body.dark-theme .form-group input::placeholder,
+body.dark-theme .form-group textarea::placeholder {
+    color: #9ca3af;
+}
+
+/* Mobile nav menu */
+body.dark-theme .nav-menu {
+    background-color: #1f1f1f;
+    box-shadow: 0 10px 27px rgba(0, 0, 0, 0.35);
+}
+
 body.dark-theme .navbar {
     background: rgba(26, 26, 26, 0.95);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Dark theme: navbar content */
+body.dark-theme .nav-logo h2 {
+    color: #93c5fd;
+}
+
 body.dark-theme .nav-link {
-    color: #e5e5e5;
+    color: #f5f5f5;
 }
 
 body.dark-theme .nav-link:hover {
@@ -190,7 +248,7 @@ body.dark-theme .contact-item {
     align-items: center;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding-top: 70px;
+    padding-top: 120px;
     position: relative;
     overflow: hidden;
 }
@@ -222,6 +280,7 @@ body.dark-theme .contact-item {
     margin-bottom: 1rem;
     line-height: 1.2;
     animation: fadeInUp 1s ease-out;
+    white-space: nowrap;
 }
 
 @keyframes fadeInUp {
@@ -276,6 +335,19 @@ body.dark-theme .contact-item {
     margin-bottom: 2rem;
 }
 
+/* Make hero buttons shorter in height and wider */
+.hero-buttons .btn {
+    padding: 6px 40px;
+    min-width: 240px;
+    font-size: 1rem;
+    line-height: 1.2;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
 .btn {
     padding: 12px 24px;
     border-radius: 8px;
@@ -321,6 +393,22 @@ body.dark-theme .contact-item {
     color: white;
 }
 
+.btn-outline i {
+    margin-right: 0.5rem;
+}
+
+/* Download Resume button - custom gradient to match hero */
+.btn-download {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: #ffffff;
+    border: none;
+}
+
+.btn-download:hover {
+    filter: brightness(1.05);
+    transform: translateY(-2px);
+}
+
 .hero-social {
     display: flex;
     gap: 1rem;
@@ -363,16 +451,21 @@ body.dark-theme .contact-item {
 }
 
 .profile-image {
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
     background: linear-gradient(135deg, #fbbf24, #f59e0b);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 1rem;
-    font-size: 3rem;
-    color: #1f2937;
+    overflow: hidden;
+}
+
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .profile-card h3 {
@@ -830,6 +923,7 @@ section {
 
     .hero-title {
         font-size: 2.5rem;
+        white-space: normal;
     }
 
     .about-content {
@@ -883,6 +977,7 @@ section {
 
     .hero-buttons {
         flex-direction: column;
+        gap: 0.5rem;
     }
 
     .section-title {
