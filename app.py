@@ -1,12 +1,18 @@
 from flask import Flask, request, jsonify, render_template, send_file
-from transformers import pipeline
 from flask_cors import CORS
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
 from datetime import datetime
-from fpdf import FPDF  
+from fpdf import FPDF
+
+try:
+    from transformers import pipeline
+    TRANSFORMERS_AVAILABLE = True
+except ImportError:
+    TRANSFORMERS_AVAILABLE = False
+    print("Warning: transformers not available - AI features disabled")  
 
 app = Flask(__name__)
 CORS(app)
@@ -19,11 +25,17 @@ EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD', '')
 
 class PortfolioAssistant:
     def __init__(self):
-        self.qa_model = pipeline('question-answering')
         self.context = self.load_portfolio_data()
+        if TRANSFORMERS_AVAILABLE:
+            try:
+                self.qa_model = pipeline('question-answering')
+            except Exception as e:
+                print(f"Warning: Could not initialize AI model: {e}")
+                self.qa_model = None
+        else:
+            self.qa_model = None
     
     def load_portfolio_data(self):
-        """Load portfolio data for AI context"""
         return """
         Nauman is a full-stack developer specializing in Python, JavaScript, and modern web technologies.
         Key skills include Flask, React, Three.js, WebGL, and AI integration.
@@ -31,7 +43,16 @@ class PortfolioAssistant:
         """
     
     def answer_question(self, question):
-        return self.qa_model(question=question, context=self.context)
+        if self.qa_model:
+            try:
+                return self.qa_model(question=question, context=self.context)
+            except Exception as e:
+                return {"answer": f"AI model error: {str(e)}", "score": 0.0}
+        else:
+            return {
+                "answer": "I'm a Computer Science student at the University of Leicester with expertise in Python, JavaScript, Flask, and web development. I'm currently working on various projects including this portfolio website.",
+                "score": 0.8
+            }
 
 class ResumeGenerator:
     def __init__(self):
@@ -40,7 +61,6 @@ class ResumeGenerator:
     def generate(self, selected_skills):
         self.pdf.add_page()
         self.pdf.set_font('Arial', 'B', 16)
-        # Add custom resume content based on selected skills
         self.pdf.cell(0, 10, 'Customized Resume', 0, 1, 'C')
         for skill in selected_skills:
             self.pdf.cell(0, 10, f'• {skill}', 0, 1)
@@ -100,24 +120,6 @@ def ask_assistant():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Contact form functionality disabled
-# @app.route('/api/contact', methods=['POST'])
-# def contact():
-#     try:
-#         data = request.get_json()
-#         errors = validate_input(data, ['name', 'email', 'subject', 'message'])
-#         
-#         if errors:
-#             return jsonify({
-#                 'success': False,
-#                 'errors': errors
-#             }), 400
-#             
-#         if send_email(data['name'], data['email'], data['subject'], data['message']):
-#             return jsonify({'success': True})
-#         return jsonify({'success': False}), 500
-#     except Exception as e:
-#         return jsonify({'error': str(e)}), 500
 
 @app.route('/generate-resume', methods=['POST'])
 def generate_resume():
@@ -155,9 +157,7 @@ def get_skills_data():
 
 @app.route('/download-resume')
 def download_resume():
-    """Download resume PDF"""
     try:
-        # Prefer a user-provided resume file if available
         candidate_paths = [
             os.path.join('static', 'Naumanpatel.pdf'),
             os.path.join('static', 'NaumanPatel.pdf'),
@@ -168,7 +168,6 @@ def download_resume():
 
         existing_resume = next((p for p in candidate_paths if os.path.exists(p)), None)
 
-        # If none found, generate a simple one as fallback
         if not existing_resume:
             pdf = FPDF()
             pdf.add_page()
@@ -179,7 +178,6 @@ def download_resume():
             pdf.cell(0, 10, 'Computer Science Student | AI/ML Enthusiast', 0, 1, 'C')
             pdf.ln(10)
             
-            # Contact Information
             pdf.set_font('Arial', 'B', 12)
             pdf.cell(0, 10, 'Contact Information', 0, 1, 'L')
             pdf.set_font('Arial', '', 10)
@@ -189,7 +187,6 @@ def download_resume():
             pdf.cell(0, 5, 'GitHub: github.com/Naumanpatell', 0, 1, 'L')
             pdf.ln(10)
             
-            # Education
             pdf.set_font('Arial', 'B', 12)
             pdf.cell(0, 10, 'Education', 0, 1, 'L')
             pdf.set_font('Arial', 'B', 10)
@@ -198,7 +195,6 @@ def download_resume():
             pdf.cell(0, 5, 'Current Student', 0, 1, 'L')
             pdf.ln(5)
             
-            # Skills
             pdf.set_font('Arial', 'B', 12)
             pdf.cell(0, 10, 'Technical Skills', 0, 1, 'L')
             pdf.set_font('Arial', '', 10)
@@ -207,7 +203,6 @@ def download_resume():
             pdf.cell(0, 5, 'Tools: Git/GitHub, VS Code, Data Structures', 0, 1, 'L')
             pdf.ln(5)
             
-            # Experience
             pdf.set_font('Arial', 'B', 12)
             pdf.cell(0, 10, 'Experience', 0, 1, 'L')
             pdf.set_font('Arial', 'B', 10)
@@ -239,4 +234,7 @@ def health_check():
 if __name__ == '__main__':
     if not EMAIL_PASSWORD:
         print("Warning: EMAIL_PASSWORD not set")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    
+
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)

@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: NaumanPatel-portfolio
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: EMAIL_ADDRESS
+        value: nauman0504@gmail.com
+      - key: EMAIL_PASSWORD
+        sync: false
+    healthCheckPath: /api/health
