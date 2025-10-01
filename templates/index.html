@@ -214,8 +214,9 @@
             <h2 class="section-title">Featured Projects</h2>
             <div class="projects-grid">
                 <div class="project-card">
-                    <div class="project-image">
-                        <i class="fas fa-chart-line"></i>
+                    <div class="project-image project-image-has-media">
+                        <img src="{{ url_for('static', filename='AIVEST.png') }}" alt="AIVest platform preview showing InvestiGraph stock simulation and IBM Watson chatbot assisting with investing questions." class="project-img" onerror="this.parentElement.classList.remove('project-image-has-media'); this.remove();">
+                        <div class="project-caption">AIVest: InvestiGraph simulation + IBM Watson chatbot</div>
                     </div>
                     <div class="project-content">
                         <h3>AIVest - Investment Education Platform</h3>
@@ -238,8 +239,9 @@
                     </div>
                 </div>
                 <div class="project-card">
-                    <div class="project-image">
-                        <i class="fas fa-gamepad"></i>
+                    <div class="project-image project-image-has-media">
+                        <img src="{{ url_for('static', filename='Pokeverse.png') }}" alt="PokeVerse web app preview: PokéDex Arcade modules and built-in AI Assistant for exploring Pokémon data." class="project-img" onerror="this.parentElement.classList.remove('project-image-has-media'); this.remove();">
+                        <div class="project-caption">PokeVerse: PokéDex Arcade + AI Assistant</div>
                     </div>
                     <div class="project-content">
                         <h3>PokeVerse - Interactive Pokémon Guide</h3>
@@ -258,7 +260,7 @@
                             <span class="tech-tag">PokeAPI</span>
                         </div>
                         <div class="project-links">
-                            <a href="#" class="btn btn-outline">View Project</a>
+                            <a href="https://pokeverse.website/" target="_blank" rel="noopener" class="btn btn-outline">View Project</a>
                             <a href="https://github.com/Naumanpatell/PokeVerse" target="_blank" class="btn btn-outline">GitHub</a>
                         </div>
                     </div>

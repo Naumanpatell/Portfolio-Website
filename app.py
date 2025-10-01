@@ -4,6 +4,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
+import shutil
 from datetime import datetime
 from fpdf import FPDF
 
@@ -234,7 +235,24 @@ def health_check():
 if __name__ == '__main__':
     if not EMAIL_PASSWORD:
         print("Warning: EMAIL_PASSWORD not set")
-    
+    # Ensure project images are available under static
+    try:
+        static_dir = os.path.join(os.path.dirname(__file__), 'static')
+        images = ['AIVEST.png', 'Pokeverse.png']
+        for image_name in images:
+            project_root_image = os.path.join(os.path.dirname(__file__), image_name)
+            static_image = os.path.join(static_dir, image_name)
+            if os.path.exists(project_root_image):
+                if not os.path.exists(static_dir):
+                    os.makedirs(static_dir, exist_ok=True)
+                should_copy = (not os.path.exists(static_image)) or (
+                    os.path.getmtime(project_root_image) > os.path.getmtime(static_image)
+                )
+                if should_copy:
+                    shutil.copy2(project_root_image, static_image)
+                    print(f'Copied {image_name} to static directory')
+    except Exception as _image_copy_error:
+        print(f"Warning: Could not prepare AIVEST.png: {_image_copy_error}")
 
     port = int(os.environ.get('PORT', 5000))
     app.run(debug=False, host='0.0.0.0', port=port)
